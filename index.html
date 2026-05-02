@@ -171,6 +171,28 @@
       opacity: 0.9;
     }
 
+    .affiliation-logos {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 28px;
+      flex-wrap: wrap;
+      margin: 18px 0 10px;
+    }
+    
+    .affiliation-logos img {
+      max-height: 48px;
+      max-width: 180px;
+      object-fit: contain;
+      opacity: 0.85;
+    }
+    
+    .author-notes {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
     pre {
       background: #111827;
       color: #f9fafb;
@@ -228,11 +250,21 @@
         <div><sup>†</sup> Equal contribution &nbsp;&nbsp; <sup>*</sup> Corresponding author</div>
       </div>
 
+      <div class="affiliation-logos">
+        <img src="pku-logo.png" alt="Peking University" />
+        <img src="faw-logo.png" alt="FAW Group" />
+        <img src="ocean-research-logo.jpg" alt="Institute of Ocean Research, Peking University" />
+      </div>
+      
+      <div class="author-notes">
+        <sup>†</sup> Equal contribution &nbsp;&nbsp; <sup>*</sup> Corresponding author
+      </div>
+
       <div class="buttons">
-        <a class="btn" href="#" target="_blank">Paper</a>
-        <a class="btn secondary" href="#" target="_blank">Video</a>
-        <a class="btn secondary" href="#" target="_blank">Code</a>
-        <a class="btn secondary" href="#citation">Citation</a>
+        <a class="btn" href="#" target="_blank">📄 Paper</a>
+        <a class="btn secondary" href="#" target="_blank">🎥 Video</a>
+        <a class="btn secondary" href="#" target="_blank">💻 Code</a>
+        <a class="btn secondary" href="#citation">📚 Citation</a>
       </div>
     </div>
   </header>
