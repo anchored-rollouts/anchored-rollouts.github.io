@@ -164,33 +164,45 @@
       background: white;
     }
 
-    .conference-logo img {
-      height: 52px;
-      width: auto;
-      margin-bottom: 18px;
-      opacity: 0.9;
-    }
-
     .affiliation-logos {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 28px;
+      gap: 32px;
       flex-wrap: wrap;
-      margin: 18px 0 10px;
+      margin: 22px 0 10px;
     }
     
-    .affiliation-logos img {
+    .affiliation-logo-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .affiliation-logo-item sup {
+      font-size: 1rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    
+    .affiliation-logo-item img {
       max-height: 48px;
-      max-width: 180px;
+      max-width: 190px;
       object-fit: contain;
-      opacity: 0.85;
     }
     
     .author-notes {
       font-size: 0.95rem;
       color: var(--muted);
-      margin-bottom: 20px;
+      margin-top: 8px;
+      margin-bottom: 22px;
+    }
+
+    .conference-logo img {
+      height: 52px;
+      width: auto;
+      margin-bottom: 18px;
+      opacity: 0.9;
     }
 
     pre {
@@ -242,18 +254,22 @@
         Feitian Zhang<sup>1</sup>,
         Guangming Xie<sup>1,3,*</sup>
       </div>
-      
-      <div class="affiliations">
-        <div><sup>1</sup> Peking University</div>
-        <div><sup>2</sup> FAW Group Co., Ltd.</div>
-        <div><sup>3</sup> Institute of Ocean Research, Peking University</div>
-        <div><sup>†</sup> Equal contribution &nbsp;&nbsp; <sup>*</sup> Corresponding author</div>
-      </div>
 
       <div class="affiliation-logos">
-        <img src="pku-logo.png" alt="Peking University" />
-        <img src="faw-logo.jpg" alt="FAW Group" />
-        <img src="ocean-research-logo.jpg" alt="Institute of Ocean Research, Peking University" />
+        <div class="affiliation-logo-item">
+          <sup>1</sup>
+          <img src="pku-logo.png" alt="Peking University" />
+        </div>
+      
+        <div class="affiliation-logo-item">
+          <sup>2</sup>
+          <img src="faw-logo.jpg" alt="FAW Group" />
+        </div>
+      
+        <div class="affiliation-logo-item">
+          <sup>3</sup>
+          <img src="ocean-research-logo.jpg" alt="Institute of Ocean Research, Peking University" />
+        </div>
       </div>
       
       <div class="author-notes">
