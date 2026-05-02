@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stabilizing 3D Continuum-Arm Rollouts</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --border: #e5e7eb;
+      --section-bg: #f8fafc;
+      --maxw: 1050px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .hero {
+      padding: 48px 0 28px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .title {
+      font-size: 2.6rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin: 0 auto 18px;
+      max-width: 980px;
+    }
+
+    .conference {
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .authors {
+      font-size: 1.05rem;
+      margin-bottom: 10px;
+    }
+
+    .affiliations {
+      font-size: 0.98rem;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--accent);
+      color: white;
+      background: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .btn.secondary {
+      background: white;
+      color: var(--accent);
+    }
+
+    .teaser {
+      padding: 34px 0;
+      text-align: center;
+    }
+
+    .teaser img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    .caption {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    section {
+      padding: 34px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    section.alt {
+      background: var(--section-bg);
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      margin: 0 0 14px;
+    }
+
+    p {
+      margin: 0 0 14px;
+      font-size: 1.02rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 1.2rem;
+    }
+
+    .media-box {
+      text-align: center;
+      padding: 16px;
+      border: 1px dashed #cbd5e1;
+      border-radius: 12px;
+      color: var(--muted);
+      background: white;
+    }
+
+    pre {
+      background: #111827;
+      color: #f9fafb;
+      padding: 16px;
+      border-radius: 12px;
+      overflow-x: auto;
+      font-size: 0.92rem;
+    }
+
+    footer {
+      padding: 28px 0 40px;
+      color: var(--muted);
+      text-align: center;
+      border-top: 1px solid var(--border);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 800px) {
+      .title {
+        font-size: 2rem;
+      }
+
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="hero">
+    <div class="container">
+      <div class="conference">RSS 2026</div>
+      <h1 class="title">
+        Stabilizing 3D Continuum-Arm Rollouts via Equilibrium Anchoring and Feature-Lifted Residual Learning
+      </h1>
+
+      <div class="authors">
+        Ahsan Tanveer, Rahdar Hussain Afridi, Waqar Hussain Afridi, Feitian Zhang, Guangming Xie
+      </div>
+
+      <div class="affiliations">
+        Peking University · FAW Group Co., Ltd. · Institute of Ocean Research, Peking University
+      </div>
+
+      <div class="buttons">
+        <a class="btn" href="#" target="_blank">Paper</a>
+        <a class="btn secondary" href="#" target="_blank">Video</a>
+        <a class="btn secondary" href="#" target="_blank">Code</a>
+        <a class="btn secondary" href="#citation">Citation</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="teaser">
+    <div class="container">
+      <img src="graphicalabstract.png" alt="Project teaser" />
+      <div class="caption">
+        Equilibrium anchoring stabilizes multi-step rollout by separating steady-state anchoring from transient correction.
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <div class="container">
+      <h2>Abstract</h2>
+      <p>
+        We propose an equilibrium-anchored residual dynamics framework for stable multi-step prediction of soft and continuum robotic systems under actuation shift. The method learns an input-conditioned equilibrium reference from static data and a residual correction from dynamic trajectories, thereby separating steady-state anchoring from transient dynamics. We evaluate the framework on a tendon-driven 3D continuum arm, classical nonlinear benchmarks, and a soft-tail hardware testbed under actuation-frequency shift.
+      </p>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="container">
+      <h2>Method</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Equilibrium Anchor</h3>
+          <p>
+            A static dataset is used to learn an actuation-conditioned equilibrium map, which provides a steady-state reference during rollout.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Residual Correction</h3>
+          <p>
+            A residual model is trained on dynamic trajectories to capture transient mismatch around the anchored state.
+          </p>
+        </div>
+      </div>
+      <p style="margin-top: 18px;">
+        This explicit separation helps reduce drift in long recursive predictions while keeping the learned correction lightweight and control-friendly.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Results</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Continuum Arm</h3>
+          <p>
+            The proposed method improves long-horizon prediction under out-of-distribution actuation and reduces backbone and tip prediction error relative to strong baselines.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Soft-Tail Hardware</h3>
+          <p>
+            On a custom soft-tail testbed under actuation-frequency shift, the method remains bounded and tracks oscillations more closely than anchor-only and residual-only variants.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="container">
+      <h2>Video</h2>
+      <div class="media-box">
+        Add your YouTube embed here later, or place a direct supplementary-video link.
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Code</h2>
+      <p>
+        A cleaned and documented implementation is being prepared for public release. A tagged release corresponding to the RSS 2026 camera-ready experiments will be linked here once finalized.
+      </p>
+    </div>
+  </section>
+
+  <section id="citation" class="alt">
+    <div class="container">
+      <h2>Citation</h2>
+      <pre>@inproceedings{tanveer2026stabilizing,
+  title={Stabilizing 3D Continuum-Arm Rollouts via Equilibrium Anchoring and Feature-Lifted Residual Learning},
+  author={Tanveer, Ahsan and Afridi, Rahdar Hussain and Afridi, Waqar Hussain and Zhang, Feitian and Xie, Guangming},
+  booktitle={Robotics: Science and Systems},
+  year={2026}
+}</pre>
+    </div>
+  </section>
+
+  <footer>
+    Project page for RSS 2026 · anchored-rollouts.github.io
+  </footer>
+
+</body>
+</html>
