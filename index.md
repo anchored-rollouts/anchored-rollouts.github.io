@@ -2,6 +2,8 @@
 
 **RSS 2026**
 
+![Teaser](teaser.png)
+
 This project page provides videos, paper links, and code-release information for our RSS 2026 paper.
 
 ## Overview
