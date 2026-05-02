@@ -22,6 +22,10 @@ We propose an equilibrium-anchored residual dynamics framework for stable multi-
 
 **Code:** A cleaned and documented implementation is being prepared for public release. A tagged release corresponding to the RSS 2026 camera-ready experiments will be linked here once finalized.
 
+## Authors
+
+Ahsan Tanveer, Rahdar Hussain Afridi, Waqar Hussain Afridi, Feitian Zhang, and Guangming Xie
+
 ## Citation
 
-Coming soon.
+Citation will be updated after the official RSS proceedings metadata is available.
