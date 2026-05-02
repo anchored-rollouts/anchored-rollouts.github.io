@@ -1,357 +1,513 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Stabilizing 3D Continuum-Arm Rollouts</title>
-    <style>
-      :root {
-        --bg: #ffffff;
-        --text: #1f2937;
-        --muted: #6b7280;
-        --accent: #2563eb;
-        --border: #e5e7eb;
-        --section-bg: #f8fafc;
-        --maxw: 1050px;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Project page for the RSS 2026 paper on equilibrium-anchored residual dynamics for stable multi-step rollouts of soft robotic systems." />
+  <meta name="keywords" content="robotics, soft robots, continuum robots, residual dynamics, equilibrium anchoring, rollout prediction, RSS 2026" />
+  <meta name="author" content="Ahsan Tanveer, Rahdar Hussain Afridi, Waqar Hussain Afridi, Feitian Zhang, Guangming Xie" />
+  <meta property="og:title" content="Stabilizing 3D Continuum-Arm Rollouts via Equilibrium Anchoring and Feature-Lifted Residual Learning" />
+  <meta property="og:description" content="Equilibrium-anchored residual dynamics for stable multi-step prediction under actuation shift." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://anchored-rollouts.github.io/" />
+  <meta property="og:image" content="https://anchored-rollouts.github.io/graphicalabstract.png" />
+  <title>Stabilizing 3D Continuum-Arm Rollouts</title>
 
-      * {
-        box-sizing: border-box;
-      }
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-      body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-        color: var(--text);
-        background: var(--bg);
-        line-height: 1.6;
-      }
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #111827;
+      --muted: #5f6b7a;
+      --muted-light: #93a0b4;
+      --accent: #2f80ed;
+      --accent-dark: #1d5fd1;
+      --accent-soft: #eef6ff;
+      --border: #e6eaf0;
+      --card: #ffffff;
+      --section: #f7faff;
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+      --radius: 22px;
+      --maxw: 1120px;
+    }
 
-      a {
-        color: var(--accent);
-        text-decoration: none;
-      }
+    * {
+      box-sizing: border-box;
+    }
 
-      a:hover {
-        text-decoration: underline;
-      }
+    html {
+      scroll-behavior: smooth;
+    }
 
-      .container {
-        max-width: var(--maxw);
-        margin: 0 auto;
-        padding: 0 20px;
-      }
+    body {
+      margin: 0;
+      font-family: "Inter", Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.65;
+    }
 
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: var(--accent-dark);
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(var(--maxw), calc(100% - 36px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 54px 0 42px;
+      text-align: center;
+      background:
+        radial-gradient(circle at top left, rgba(47, 128, 237, 0.12), transparent 34%),
+        radial-gradient(circle at top right, rgba(112, 193, 179, 0.12), transparent 34%),
+        linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .conference-logo img {
+      height: 58px;
+      width: auto;
+      margin-bottom: 22px;
+    }
+
+    .title {
+      max-width: 1050px;
+      margin: 0 auto 22px;
+      font-size: clamp(2.15rem, 5vw, 4.35rem);
+      font-weight: 800;
+      line-height: 1.12;
+      letter-spacing: -0.045em;
+      color: #263548;
+    }
+
+    .authors {
+      max-width: 1080px;
+      margin: 0 auto 18px;
+      font-size: clamp(1rem, 2vw, 1.22rem);
+      color: #1f2937;
+      line-height: 1.85;
+    }
+
+    .authors sup {
+      font-size: 0.7em;
+      line-height: 0;
+      margin-left: 1px;
+    }
+
+    .affiliation-logos {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 34px;
+      flex-wrap: wrap;
+      margin: 22px 0 10px;
+    }
+
+    .affiliation-logo-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+    }
+
+    .affiliation-logo-item sup {
+      font-size: 0.86rem;
+      line-height: 1;
+      color: var(--muted);
+      font-weight: 600;
+      position: relative;
+      top: 6px;
+    }
+
+    .affiliation-logo-item img {
+      max-height: 48px;
+      max-width: 198px;
+      object-fit: contain;
+    }
+
+    .author-notes {
+      margin: 12px 0 24px;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-width: 112px;
+      padding: 12px 22px;
+      border-radius: 999px;
+      border: 1.5px solid var(--accent);
+      background: var(--accent);
+      color: #ffffff;
+      font-weight: 700;
+      transition: all 0.18s ease;
+      box-shadow: 0 8px 18px rgba(47, 128, 237, 0.18);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      background: var(--accent-dark);
+      border-color: var(--accent-dark);
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    .btn.secondary {
+      background: #ffffff;
+      color: var(--accent);
+      box-shadow: none;
+    }
+
+    .btn.secondary:hover {
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+    }
+
+    .teaser-section {
+      padding: 42px 0 30px;
+      background: #ffffff;
+    }
+
+    .teaser-card {
+      max-width: 1020px;
+      margin: 0 auto;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #ffffff;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .teaser-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 14px;
+    }
+
+    .caption {
+      max-width: 900px;
+      margin: 12px auto 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+      text-align: center;
+    }
+
+    section {
+      padding: 58px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    section.alt {
+      background: var(--section);
+    }
+
+    .section-title {
+      margin: 0 0 20px;
+      text-align: center;
+      font-size: clamp(1.75rem, 3vw, 2.3rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #253247;
+    }
+
+    .section-lead {
+      max-width: 880px;
+      margin: 0 auto 26px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 1.06rem;
+    }
+
+    .text-block {
+      max-width: 920px;
+      margin: 0 auto;
+      font-size: 1.04rem;
+      color: #2f3b4a;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+      margin-top: 26px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 26px;
+    }
+
+    .card {
+      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--card);
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.055);
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 1.18rem;
+      color: #243247;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .result-number {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-size: 2rem;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 930px;
+      margin: 28px auto 0;
+      padding-bottom: 52.31%;
+      height: 0;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      background: #000000;
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .code-note {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: #ffffff;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    pre {
+      max-width: 980px;
+      margin: 22px auto 0;
+      padding: 22px;
+      overflow-x: auto;
+      background: #111827;
+      color: #f9fafb;
+      border-radius: 18px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      box-shadow: var(--shadow);
+    }
+
+    footer {
+      padding: 32px 0 42px;
+      color: var(--muted);
+      text-align: center;
+      border-top: 1px solid var(--border);
+      font-size: 0.95rem;
+      background: #ffffff;
+    }
+
+    @media (max-width: 820px) {
       .hero {
-        padding: 48px 0 28px;
-        text-align: center;
-        border-bottom: 1px solid var(--border);
+        padding-top: 34px;
       }
 
       .conference-logo img {
-        height: 52px;
-        width: auto;
-        margin-bottom: 18px;
-        opacity: 0.9;
+        height: 44px;
       }
 
-      .title {
-        max-width: 980px;
-        margin: 0 auto 18px;
-        font-size: 2.6rem;
-        font-weight: 700;
-        line-height: 1.2;
-      }
-
-      .authors {
-        margin-bottom: 10px;
-        font-size: 1.05rem;
+      .grid-2,
+      .grid-3 {
+        grid-template-columns: 1fr;
       }
 
       .affiliation-logos {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
-        gap: 34px;
-        margin: 22px 0 10px;
-      }
-
-      .affiliation-logo-item {
-        display: flex;
-        align-items: flex-start;
-        gap: 6px;
-      }
-
-      .affiliation-logo-item sup {
-        position: relative;
-        top: 6px;
-        color: var(--text);
-        font-size: 0.75em;
-        font-weight: 400;
-        line-height: 1;
+        gap: 20px;
       }
 
       .affiliation-logo-item img {
-        max-width: 190px;
-        max-height: 48px;
-        object-fit: contain;
-      }
-
-      .author-notes {
-        margin-top: 8px;
-        margin-bottom: 22px;
-        color: var(--muted);
-        font-size: 0.95rem;
+        max-height: 38px;
+        max-width: 150px;
       }
 
       .buttons {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 12px;
-        margin-top: 12px;
+        gap: 10px;
       }
 
       .btn {
-        display: inline-block;
-        padding: 10px 18px;
-        border: 1px solid var(--accent);
-        border-radius: 999px;
-        background: var(--accent);
-        color: white;
-        font-weight: 600;
-        text-decoration: none;
+        min-width: 102px;
+        padding: 10px 16px;
       }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="container">
+      <div class="conference-logo">
+        <img src="rss2026-logo.png" alt="Robotics: Science and Systems 2026" />
+      </div>
 
-      .btn:hover {
-        text-decoration: none;
-      }
+      <h1 class="title">
+        Stabilizing 3D Continuum-Arm Rollouts via Equilibrium Anchoring and Feature-Lifted Residual Learning
+      </h1>
 
-      .btn.secondary {
-        background: white;
-        color: var(--accent);
-      }
+      <div class="authors">
+        <a href="https://iahsant.github.io/" target="_blank" rel="noopener">Ahsan Tanveer</a><sup>1</sup>,
+        Rahdar Hussain Afridi<sup>1,2,†</sup>,
+        Waqar Hussain Afridi<sup>1,†</sup>,
+        Feitian Zhang<sup>1</sup>,
+        Guangming Xie<sup>1,3,*</sup>
+      </div>
 
-      .teaser {
-        padding: 24px 0;
-        text-align: center;
-      }
-
-      .teaser img {
-        width: 78%;
-        max-width: 900px;
-        height: auto;
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-      }
-
-      .caption {
-        margin-top: 10px;
-        color: var(--muted);
-        font-size: 0.95rem;
-      }
-
-      section {
-        padding: 34px 0;
-        border-top: 1px solid var(--border);
-      }
-
-      section.alt {
-        background: var(--section-bg);
-      }
-
-      h2 {
-        margin: 0 0 14px;
-        font-size: 1.8rem;
-      }
-
-      p {
-        margin: 0 0 14px;
-        font-size: 1.02rem;
-      }
-
-      .grid-2 {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 24px;
-      }
-
-      .card {
-        padding: 18px;
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        background: white;
-      }
-
-      .card h3 {
-        margin-top: 0;
-        margin-bottom: 8px;
-        font-size: 1.2rem;
-      }
-
-      .video-wrapper {
-        position: relative;
-        width: 100%;
-        max-width: 900px;
-        height: 0;
-        margin: 0 auto;
-        padding-bottom: 50.625%;
-      }
-
-      .video-wrapper iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-      }
-
-      pre {
-        overflow-x: auto;
-        padding: 16px;
-        border-radius: 12px;
-        background: #111827;
-        color: #f9fafb;
-        font-size: 0.92rem;
-      }
-
-      footer {
-        padding: 28px 0 40px;
-        border-top: 1px solid var(--border);
-        color: var(--muted);
-        font-size: 0.95rem;
-        text-align: center;
-      }
-
-      @media (max-width: 800px) {
-        .title {
-          font-size: 2rem;
-        }
-
-        .teaser img {
-          width: 100%;
-        }
-
-        .grid-2 {
-          grid-template-columns: 1fr;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <header class="hero">
-      <div class="container">
-        <div class="conference-logo">
-          <img src="rss2026-logo.png" alt="RSS 2026" />
+      <div class="affiliation-logos" aria-label="Affiliations">
+        <div class="affiliation-logo-item">
+          <sup>1</sup>
+          <img src="pku-logo.png" alt="Peking University" />
         </div>
-
-        <h1 class="title">
-          Stabilizing 3D Continuum-Arm Rollouts via Equilibrium Anchoring and Feature-Lifted Residual Learning
-        </h1>
-
-        <div class="authors">
-          <a href="https://iahsant.github.io/" target="_blank" rel="noopener">Ahsan Tanveer</a><sup>1</sup>,
-          Rahdar Hussain Afridi<sup>1,2,†</sup>, Waqar Hussain Afridi<sup>1,†</sup>, Feitian Zhang<sup>1</sup>,
-          Guangming Xie<sup>1,3,*</sup>
+        <div class="affiliation-logo-item">
+          <sup>2</sup>
+          <img src="faw-logo.jpg" alt="FAW Group Co., Ltd." />
         </div>
-
-        <div class="affiliation-logos">
-          <div class="affiliation-logo-item">
-            <sup>1</sup>
-            <img src="pku-logo.png" alt="Peking University" />
-          </div>
-
-          <div class="affiliation-logo-item">
-            <sup>2</sup>
-            <img src="faw-logo.jpg" alt="FAW Group" />
-          </div>
-
-          <div class="affiliation-logo-item">
-            <sup>3</sup>
-            <img src="ocean-research-logo.jpg" alt="Institute of Ocean Research, Peking University" />
-          </div>
-        </div>
-
-        <div class="author-notes">
-          <sup>†</sup> Equal contribution &nbsp;&nbsp; <sup>*</sup> Corresponding author
-        </div>
-
-        <div class="buttons">
-          <a class="btn" href="#paper">📄 Paper</a>
-          <a class="btn secondary" href="#video">🎥 Video</a>
-          <a class="btn secondary" href="#code">💻 Code</a>
-          <a class="btn secondary" href="#citation">📚 Citation</a>
+        <div class="affiliation-logo-item">
+          <sup>3</sup>
+          <img src="ocean-research-logo.jpg" alt="Institute of Ocean Research, Peking University" />
         </div>
       </div>
-    </header>
 
-    <div class="teaser">
+      <div class="author-notes">
+        <sup>†</sup> Equal contribution &nbsp;&nbsp; <sup>*</sup> Corresponding author
+      </div>
+
+      <div class="buttons">
+        <a class="btn" href="#paper">📄 Paper</a>
+        <a class="btn secondary" href="#video">🎥 Video</a>
+        <a class="btn secondary" href="#code">💻 Code</a>
+        <a class="btn secondary" href="#citation">📚 Citation</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="teaser-section">
       <div class="container">
-        <img src="graphicalabstract.png" alt="Project teaser" />
+        <div class="teaser-card">
+          <img src="graphicalabstract.png" alt="Overview of equilibrium anchoring, residual dynamics, and hybrid rollout prediction" />
+        </div>
         <div class="caption">
           Equilibrium anchoring stabilizes multi-step rollout by separating steady-state anchoring from transient correction.
         </div>
       </div>
-    </div>
+    </section>
 
     <section id="abstract">
       <div class="container">
-        <h2>Abstract</h2>
-        <p>
+        <h2 class="section-title">Abstract</h2>
+        <div class="text-block">
           We propose an equilibrium-anchored residual dynamics framework for stable multi-step prediction of soft and continuum robotic systems under actuation shift. The method learns an input-conditioned equilibrium reference from static data and a residual correction from dynamic trajectories, thereby separating steady-state anchoring from transient dynamics. We evaluate the framework on a tendon-driven 3D continuum arm, classical nonlinear benchmarks, and a soft-tail hardware testbed under actuation-frequency shift.
+        </div>
+      </div>
+    </section>
+
+    <section id="paper" class="alt">
+      <div class="container">
+        <h2 class="section-title">Paper</h2>
+        <p class="section-lead">
+          The camera-ready PDF will be linked here after final submission.
         </p>
+        <div class="code-note">
+          <strong>Paper PDF:</strong> coming soon
+        </div>
       </div>
     </section>
 
-    <section class="alt" id="paper">
+    <section id="method">
       <div class="container">
-        <h2>Paper</h2>
-        <p>Paper PDF: coming soon.</p>
-      </div>
-    </section>
-
-    <section>
-      <div class="container">
-        <h2>Method</h2>
+        <h2 class="section-title">Method</h2>
+        <p class="section-lead">
+          The predictor separates the steady-state component of the response from the transient correction learned from dynamic trajectories.
+        </p>
         <div class="grid-2">
           <div class="card">
             <h3>Equilibrium Anchor</h3>
             <p>
-              A static dataset is used to learn an actuation-conditioned equilibrium map, which provides a steady-state reference during rollout.
+              A static dataset is used to learn an actuation-conditioned equilibrium map that provides a physically plausible steady-state reference during rollout.
             </p>
           </div>
           <div class="card">
             <h3>Residual Correction</h3>
             <p>
-              A residual model is trained on dynamic trajectories to capture transient mismatch around the anchored state.
+              A feature-lifted residual model is trained on dynamic trajectories to capture transient mismatch around the anchored state.
             </p>
           </div>
         </div>
-        <p style="margin-top: 18px">
-          This explicit separation helps reduce drift in long recursive predictions while keeping the learned correction lightweight and control-friendly.
-        </p>
       </div>
     </section>
 
-    <section class="alt">
+    <section id="results" class="alt">
       <div class="container">
-        <h2>Results</h2>
-        <div class="grid-2">
+        <h2 class="section-title">Results</h2>
+        <div class="grid-3">
           <div class="card">
-            <h3>Continuum Arm</h3>
+            <span class="result-number">26%</span>
+            <h3>Backbone RMSE Reduction</h3>
             <p>
-              The proposed method improves long-horizon prediction under out-of-distribution actuation and reduces backbone and tip prediction error relative to strong baselines.
+              The hybrid predictor reduces backbone position error relative to the equilibrium-only anchor on the continuum-arm benchmark.
             </p>
           </div>
           <div class="card">
-            <h3>Soft-Tail Hardware</h3>
+            <span class="result-number">27%</span>
+            <h3>Tip RMSE Reduction</h3>
             <p>
-              On a custom soft-tail testbed under actuation-frequency shift, the method remains bounded and tracks oscillations more closely than anchor-only and residual-only variants.
+              The method improves tip prediction accuracy while preserving stable recursive rollouts under stronger and faster actuation.
+            </p>
+          </div>
+          <div class="card">
+            <span class="result-number">74%</span>
+            <h3>Hardware Improvement</h3>
+            <p>
+              On the soft-tail hardware testbed, Hybrid lowers RMSE by at least 74% relative to the residual-only model under frequency shift.
             </p>
           </div>
         </div>
@@ -360,12 +516,14 @@
 
     <section id="video">
       <div class="container">
-        <h2>Video</h2>
+        <h2 class="section-title">Video</h2>
+        <p class="section-lead">
+          Supplementary video showing continuum-arm rollouts, benchmark behavior, and soft-tail hardware experiments.
+        </p>
         <div class="video-wrapper">
           <iframe
             src="https://www.youtube.com/embed/HR3R7MmTknQ"
             title="Supplementary video"
-            frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen>
           </iframe>
@@ -373,18 +531,21 @@
       </div>
     </section>
 
-    <section class="alt" id="code">
+    <section id="code" class="alt">
       <div class="container">
-        <h2>Code</h2>
-        <p>
+        <h2 class="section-title">Code</h2>
+        <div class="code-note">
           A cleaned and documented implementation is being prepared for public release. A tagged release corresponding to the RSS 2026 camera-ready experiments will be linked here once finalized.
-        </p>
+        </div>
       </div>
     </section>
 
     <section id="citation">
       <div class="container">
-        <h2>Citation</h2>
+        <h2 class="section-title">Citation</h2>
+        <p class="section-lead">
+          Citation will be updated after the official RSS proceedings metadata is available.
+        </p>
         <pre>@inproceedings{tanveer2026stabilizing,
   title={Stabilizing 3D Continuum-Arm Rollouts via Equilibrium Anchoring and Feature-Lifted Residual Learning},
   author={Tanveer, Ahsan and Afridi, Rahdar Hussain and Afridi, Waqar Hussain and Zhang, Feitian and Xie, Guangming},
@@ -393,7 +554,10 @@
 }</pre>
       </div>
     </section>
+  </main>
 
-    <footer>Project page for RSS 2026 · anchored-rollouts.github.io</footer>
-  </body>
+  <footer>
+    Project page for RSS 2026 · <a href="https://anchored-rollouts.github.io/">anchored-rollouts.github.io</a>
+  </footer>
+</body>
 </html>
