@@ -12,15 +12,15 @@ We propose an equilibrium-anchored residual dynamics framework for stable multi-
 
 ## Paper
 
-Paper PDF: coming soon
+**Paper PDF:** coming soon  
 
 ## Videos
 
-Supplementary video: coming soon
+**Supplementary video:** coming soon  
 
 ## Code
 
-A cleaned and documented implementation is being prepared for public release. A tagged release corresponding to the RSS 2026 camera-ready experiments will be linked here once finalized.
+**Code:** A cleaned and documented implementation is being prepared for public release. A tagged release corresponding to the RSS 2026 camera-ready experiments will be linked here once finalized.
 
 ## Citation
 
