@@ -12,7 +12,7 @@ Website: <https://anchored-rollouts.github.io/>
 
 - `index.html`: project page.
 - `assets/`: figures used on the project page.
-- `graphicalabstract.png`: overview image used in the page header.
+- `assets/graphicalabstract.png`: overview image used by the project page.
 - `rss2026-artifact-v1/`: paper artifact with code, datasets, and result summaries.
 
 ## Paper Artifact
