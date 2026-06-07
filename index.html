@@ -7,7 +7,7 @@
   <title>Stabilizing 3D Continuum-Arm Rollouts | RSS 2026</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     :root {
@@ -28,6 +28,14 @@
       --radius: 12px;
       --shadow: 0 2px 16px rgba(20, 20, 31, 0.06);
       --shadow-lg: 0 8px 32px rgba(20, 20, 31, 0.09);
+      --font: 'Inter', system-ui, -apple-system, sans-serif;
+      --text-xs: 0.8125rem;
+      --text-sm: 0.875rem;
+      --text-base: 1rem;
+      --text-lg: 1.125rem;
+      --text-xl: 1.5rem;
+      --leading: 1.65;
+      --leading-tight: 1.4;
     }
 
     *, *::before, *::after { box-sizing: border-box; }
@@ -35,21 +43,60 @@
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: var(--font);
       color: var(--ink);
       background: var(--surface);
-      line-height: 1.65;
+      line-height: var(--leading);
       margin: 0;
-      font-size: 1rem;
+      font-size: var(--text-base);
       -webkit-font-smoothing: antialiased;
     }
 
+    h1, h2, h3, h4, p {
+      font-family: var(--font);
+    }
+
     h1, h2, h3 {
-      font-family: 'Inter', system-ui, sans-serif;
       font-weight: 700;
       letter-spacing: -0.02em;
-      line-height: 1.2;
+      line-height: var(--leading-tight);
       color: var(--ink);
+    }
+
+    /* Shared body copy */
+    .body-text,
+    .section-lead,
+    .abstract-text,
+    .contrib-card p,
+    .method-step p,
+    .figure-caption,
+    .teaser-caption,
+    .hero-subtitle {
+      font-family: var(--font);
+      font-size: var(--text-base);
+      line-height: var(--leading);
+      color: var(--ink-muted);
+    }
+
+    .meta-text,
+    .affiliations,
+    .legend,
+    .table-note,
+    table.results,
+    .highlight-card .label,
+    .nav-brand,
+    footer {
+      font-family: var(--font);
+      font-size: var(--text-sm);
+      line-height: var(--leading);
+    }
+
+    .nav-links a,
+    .contrib-card .num,
+    .copy-btn {
+      font-family: var(--font);
+      font-size: var(--text-xs);
+      line-height: var(--leading);
     }
 
     a { color: var(--accent); text-decoration: none; }
@@ -81,7 +128,6 @@
 
     .nav-brand {
       font-weight: 600;
-      font-size: 0.9rem;
       color: var(--ink);
       text-decoration: none;
       white-space: nowrap;
@@ -97,7 +143,6 @@
     }
 
     .nav-links a {
-      font-size: 0.82rem;
       font-weight: 500;
       color: var(--ink-muted);
       padding: 6px 12px;
@@ -127,7 +172,7 @@
       border: 1px solid var(--border);
       border-radius: 999px;
       padding: 6px 16px;
-      font-size: 0.85rem;
+      font-size: var(--text-sm);
       font-weight: 600;
       color: var(--ink-muted);
       margin-bottom: 24px;
@@ -145,11 +190,8 @@
 
     .hero-subtitle {
       text-align: center;
-      font-size: 1.05rem;
-      color: var(--ink-muted);
       max-width: 640px;
       margin: 0 auto 32px;
-      line-height: 1.5;
     }
 
     .authors-block {
@@ -158,7 +200,7 @@
     }
 
     .authors-block .author-line {
-      font-size: 1.05rem;
+      font-size: var(--text-base);
       margin-bottom: 6px;
     }
 
@@ -176,11 +218,9 @@
 
     .affiliations {
       text-align: center;
-      font-size: 0.88rem;
       color: var(--ink-light);
       max-width: 720px;
       margin: 0 auto 28px;
-      line-height: 1.55;
     }
 
     .affiliations sup { font-size: 0.75em; }
@@ -199,7 +239,7 @@
       gap: 8px;
       padding: 10px 20px;
       border-radius: 8px;
-      font-size: 0.9rem;
+      font-size: var(--text-sm);
       font-weight: 600;
       text-decoration: none;
       transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
@@ -251,10 +291,7 @@
 
     .teaser-caption {
       margin-top: 12px;
-      font-size: 0.82rem;
-      color: var(--ink-light);
       text-align: center;
-      line-height: 1.5;
     }
 
     .legend {
@@ -263,8 +300,8 @@
       flex-wrap: wrap;
       gap: 16px;
       margin-top: 14px;
-      font-size: 0.8rem;
       font-weight: 500;
+      color: var(--ink-light);
     }
 
     .legend span {
@@ -309,9 +346,7 @@
     }
 
     .highlight-card .label {
-      font-size: 0.78rem;
       color: var(--ink-light);
-      line-height: 1.35;
     }
 
     /* Sections */
@@ -322,25 +357,18 @@
     .section-alt { background: var(--surface-alt); }
 
     .section-title {
-      font-size: 1.65rem;
+      font-size: var(--text-xl);
       margin: 0 0 8px;
       text-align: center;
     }
 
     .section-lead {
       text-align: center;
-      color: var(--ink-muted);
       max-width: 680px;
       margin: 0 auto 36px;
-      font-size: 1rem;
     }
 
     .abstract-text {
-      font-family: 'Crimson Pro', Georgia, serif;
-      font-size: 1.2rem;
-      line-height: 1.75;
-      color: var(--ink-muted);
-      text-align: justify;
       max-width: 900px;
       margin: 0 auto;
     }
@@ -373,21 +401,18 @@
       background: var(--accent-light);
       color: var(--accent);
       border-radius: 50%;
-      font-size: 0.8rem;
       font-weight: 700;
       margin-bottom: 12px;
     }
 
     .contrib-card h3 {
-      font-size: 1rem;
+      font-size: var(--text-base);
+      font-weight: 600;
       margin: 0 0 8px;
     }
 
     .contrib-card p {
       margin: 0;
-      font-size: 0.92rem;
-      color: var(--ink-muted);
-      line-height: 1.55;
     }
 
     /* Method steps */
@@ -409,16 +434,14 @@
     .section-alt .method-step { background: var(--surface); }
 
     .method-step h3 {
-      font-size: 0.95rem;
+      font-size: var(--text-base);
+      font-weight: 600;
       margin: 0 0 10px;
       color: var(--accent);
     }
 
     .method-step p {
       margin: 0;
-      font-size: 0.92rem;
-      color: var(--ink-muted);
-      line-height: 1.55;
     }
 
     .eq-block {
@@ -429,9 +452,11 @@
       margin: 20px auto;
       max-width: 640px;
       text-align: center;
-      font-family: 'Crimson Pro', Georgia, serif;
-      font-size: 1.1rem;
+      font-family: var(--font);
+      font-size: var(--text-base);
+      font-weight: 500;
       color: var(--ink);
+      line-height: var(--leading);
     }
 
     /* Figures */
@@ -457,9 +482,6 @@
 
     .figure-caption {
       margin-top: 14px;
-      font-size: 0.88rem;
-      color: var(--ink-muted);
-      line-height: 1.55;
     }
 
     .figure-caption strong { color: var(--ink); }
@@ -488,7 +510,6 @@
     table.results {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.88rem;
     }
 
     table.results th,
@@ -501,7 +522,7 @@
     table.results th {
       background: var(--surface-alt);
       font-weight: 600;
-      font-size: 0.8rem;
+      font-size: var(--text-xs);
       color: var(--ink-muted);
     }
 
@@ -523,7 +544,6 @@
     }
 
     .table-note {
-      font-size: 0.8rem;
       color: var(--ink-light);
       margin-top: 10px;
       text-align: center;
@@ -564,8 +584,9 @@
       padding: 24px;
       border-radius: var(--radius);
       overflow-x: auto;
-      font-size: 0.82rem;
-      line-height: 1.6;
+      font-family: ui-monospace, 'Cascadia Code', 'Consolas', monospace;
+      font-size: var(--text-sm);
+      line-height: var(--leading);
       margin: 0;
     }
 
@@ -578,7 +599,6 @@
       border: 1px solid rgba(255,255,255,0.2);
       border-radius: 6px;
       padding: 6px 12px;
-      font-size: 0.75rem;
       font-weight: 600;
       cursor: pointer;
       transition: background 0.15s;
@@ -592,7 +612,6 @@
       padding: 40px 24px;
       background: var(--ink);
       color: #9aa0b4;
-      font-size: 0.85rem;
     }
 
     footer a { color: #c8d0e0; }
@@ -609,7 +628,6 @@
       .section { padding: 48px 0; }
       .highlights { grid-template-columns: 1fr 1fr; }
       .nav-links { display: none; }
-      .authors-block .author-line { font-size: 0.95rem; }
     }
   </style>
 </head>
