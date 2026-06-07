@@ -1,0 +1,6 @@
+{
+  "state_rmse": Infinity,
+  "backbone_rmse": Infinity,
+  "tip_pos_rmse": Infinity,
+  "tip_ori_rmse_deg": 26.320663197112165
+}

@@ -1,6 +1,6 @@
 # Stabilizing 3D Continuum-Arm Rollouts
 
-Project page and code release for the RSS 2026 paper:
+Project page and RSS 2026 research artifact for:
 
 **Stabilizing 3D Continuum-Arm Rollouts via Equilibrium Anchoring and Feature-Lifted Residual Learning**
 
@@ -8,57 +8,32 @@ Authors: Ahsan Tanveer, Rahdar Hussain Afridi, Waqar Hussain Afridi, Feitian Zha
 
 Website: <https://anchored-rollouts.github.io/>
 
-## Overview
+## Repository Contents
 
-This work studies multi-step open-loop prediction for continuum and soft robots under actuation distribution shift. Recursive rollouts can accumulate small one-step errors, bias the predicted steady response, and eventually drift into implausible configurations.
+- `index.html`: project page.
+- `assets/`: figures used on the project page.
+- `graphicalabstract.png`: overview image used in the page header.
+- `rss2026-artifact-v1/`: paper artifact with code, datasets, and result summaries.
 
-The paper proposes an **equilibrium-anchored residual-learning** framework:
+## Paper Artifact
 
-1. Learn an actuation-conditioned equilibrium map `P(u)` from static data `D2`.
-2. Pull each recursive prediction toward this steady-state reference with a contractive anchor update.
-3. Learn a feature-lifted residual correction from dynamic rollouts `D1`.
-4. Evaluate all models under the same 200-step out-of-distribution rollout protocol.
+The artifact contains the continuum-arm reproduction package:
 
-## What Is In This Repository
+- dynamic rollout datasets `D1_train.h5` and `D1_test.h5`;
+- static equilibrium dataset `D2_dataset.h5`;
+- reusable Python source for data loading, feature construction, model fitting, rollouts, and metrics;
+- scripts for the main comparison, multi-seed sweep, and equilibrium-data fraction sweep;
+- compact result summaries for the continuum-arm and baseline comparisons.
 
-- `index.html`: public project page.
-- `assets/`: selected paper figures used by the website.
-- `graphicalabstract.png`: hero/overview figure.
-- `code-release-v1/`: cleaned public code and data release.
-
-## Code Release
-
-The cleaned release keeps the materials needed to reproduce the continuum-arm experiments available in the raw artifact:
-
-- one canonical copy of `D1_train.h5`, `D1_test.h5`, and `D2_dataset.h5`;
-- reusable Python modules for loading data, fitting models, and evaluating rollouts;
-- scripts for the main continuum-arm comparison, multi-seed sweep, and `D2` fraction sweep;
-- compact CSV/JSON summaries for paper results and baselines.
-
-Large generated rollout caches, duplicate datasets, scratch folders, and intermediate plotting outputs were intentionally removed.
-
-Main entry point:
+Main command:
 
 ```bash
-cd code-release-v1
+cd rss2026-artifact-v1
 pip install -r requirements.txt
 python scripts/run_continuum_models.py --model all
 ```
 
-See [`code-release-v1/README.md`](code-release-v1/README.md) for full reproduction instructions.
-
-## Paper Results Covered By The Release
-
-The code release focuses on the continuum-arm experiments present in this repository:
-
-- equilibrium-prior baseline,
-- residual-only baseline,
-- proposed equilibrium-anchored residual hybrid,
-- neural-anchor variant summaries,
-- `D2` fraction sweep,
-- compact summaries for EDMDc, N4SID, SINDYc, MLP, and fish baseline comparisons.
-
-The soft-tail hardware and low-dimensional benchmark code/data described in the paper were not present in the raw local artifact, so they are discussed on the project page but not fabricated in the release.
+See [`rss2026-artifact-v1/README.md`](rss2026-artifact-v1/README.md) for detailed artifact instructions.
 
 ## Citation
 
