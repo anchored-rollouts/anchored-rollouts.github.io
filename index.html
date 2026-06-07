@@ -10,7 +10,7 @@
   <meta property="og:description" content="A steady-state anchored residual predictor for stable long-horizon continuum-arm rollouts under actuation shift." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://anchored-rollouts.github.io/" />
-  <meta property="og:image" content="https://anchored-rollouts.github.io/graphicalabstract.png" />
+  <meta property="og:image" content="https://anchored-rollouts.github.io/assets/graphicalabstract.png" />
   <title>Anchored Rollouts | RSS 2026</title>
 
   <style>
@@ -66,7 +66,7 @@
       color: #ffffff;
       background:
         linear-gradient(90deg, rgba(7, 13, 24, 0.92), rgba(7, 13, 24, 0.64) 46%, rgba(7, 13, 24, 0.20)),
-        url("graphicalabstract.png") center / cover no-repeat;
+        url("assets/graphicalabstract.png") center / cover no-repeat;
       border-bottom: 1px solid #0f1b2f;
     }
 
@@ -383,6 +383,10 @@
       max-height: 520px;
     }
 
+    .figure-card.wide img {
+      max-height: 680px;
+    }
+
     .figure-caption {
       margin: 0;
       padding: 11px 13px;
@@ -528,7 +532,7 @@
   <header class="hero">
     <div class="hero-inner">
       <div class="hero-top">
-        <img class="rss-logo" src="rss2026-logo.png" alt="Robotics: Science and Systems 2026" />
+        <img class="rss-logo" src="assets/rss2026-logo.png" alt="Robotics: Science and Systems 2026" />
         <span class="paper-tag">Equilibrium anchored residual rollouts</span>
       </div>
       <h1>Stabilizing 3D Continuum-Arm Rollouts via Equilibrium Anchoring and Feature-Lifted Residual Learning</h1>
@@ -544,9 +548,9 @@
       </div>
       <div class="notes"><sup>&dagger;</sup> Equal contribution &nbsp; <sup>*</sup> Corresponding author</div>
       <div class="hero-affiliations" aria-label="Affiliations">
-        <img src="pku-logo.png" alt="Peking University" />
-        <img src="faw-logo.jpg" alt="FAW Group Co., Ltd." />
-        <img src="ocean-research-logo.jpg" alt="Institute of Ocean Research, Peking University" />
+        <img src="assets/pku-logo.png" alt="Peking University" />
+        <img src="assets/faw-logo.jpg" alt="FAW Group Co., Ltd." />
+        <img src="assets/ocean-research-logo.jpg" alt="Institute of Ocean Research, Peking University" />
       </div>
       <div class="actions">
         <a class="button primary" href="#artifact">Research Artifact V1</a>
@@ -636,7 +640,7 @@
             <figcaption class="figure-caption">Training and deployment pipeline for anchored residual prediction.</figcaption>
           </figure>
           <figure class="figure-card compact">
-            <img src="graphicalabstract.png" alt="Graphical overview of rollout behavior" />
+            <img src="assets/graphicalabstract.png" alt="Graphical overview of rollout behavior" />
             <figcaption class="figure-caption">Visual summary of equilibrium prior, residual-only, and hybrid rollout behavior.</figcaption>
           </figure>
         </div>
@@ -750,16 +754,10 @@
             <p>The anchored model avoids catastrophic rollouts in the reported sweep.</p>
           </article>
         </div>
-        <div class="figure-strip">
-          <figure class="figure-card">
-            <img src="assets/FishVanderPOl2.svg" alt="Soft-tail hardware and Van der Pol benchmark validation" />
-            <figcaption class="figure-caption">Soft-tail hardware, shifted-frequency rollout traces, and Van der Pol robustness summary.</figcaption>
-          </figure>
-          <figure class="figure-card compact">
-            <img src="assets/ModelComparisonBox2.svg" alt="Model comparison summary" />
-            <figcaption class="figure-caption">Model comparison summary for the continuum-arm predictors.</figcaption>
-          </figure>
-        </div>
+        <figure class="figure-card wide" style="margin-top: 16px;">
+          <img src="assets/FishVanderPOl2.svg" alt="Soft-tail hardware and Van der Pol benchmark validation" />
+          <figcaption class="figure-caption">Soft-tail hardware, shifted-frequency rollout traces, and Van der Pol robustness summary.</figcaption>
+        </figure>
       </div>
     </section>
 
