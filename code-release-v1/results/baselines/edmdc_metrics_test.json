@@ -1,0 +1,20 @@
+{
+  "state_rmse": 1.9152256779517243,
+  "backbone_rmse": 0.12099361870138638,
+  "backbone_rmse_cm": 12.099361870138639,
+  "tip_pos_rmse": 0.2044044813076513,
+  "tip_pos_rmse_cm": 20.44044813076513,
+  "tip_ori_rmse_deg": 22.912553260931606,
+  "shape_rmse_final_median": 0.10065877968714201,
+  "shape_rmse_final_median_cm": 10.0658779687142,
+  "shape_rmse_last_quarter_median_mean": 0.09377627016671095,
+  "shape_rmse_last_quarter_median_mean_cm": 9.377627016671095,
+  "shape_rmse_last_1s_median_mean": 0.09410003214628443,
+  "shape_rmse_last_1s_median_mean_cm": 9.410003214628443,
+  "catastrophic_threshold": 100.0,
+  "catastrophic_rollout_rate_percent": 0.0,
+  "num_catastrophic": 0,
+  "catastrophic_ids": [],
+  "max_shared_prefix_rmse": 2.3252161277519425,
+  "final_median_shared_prefix_rmse": 1.3481700432408368
+}
