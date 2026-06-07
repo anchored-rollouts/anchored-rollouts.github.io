@@ -1,583 +1,343 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Project page and artifact for the RSS 2026 paper on equilibrium-anchored residual rollouts for continuum robots." />
-  <meta name="author" content="Ahsan Tanveer, Rahdar Hussain Afridi, Waqar Hussain Afridi, Feitian Zhang, Guangming Xie" />
-  <meta property="og:title" content="Stabilizing 3D Continuum-Arm Rollouts" />
-  <meta property="og:description" content="Equilibrium anchoring plus residual learning for stable long-horizon continuum-arm prediction." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://anchored-rollouts.github.io/" />
-  <meta property="og:image" content="https://anchored-rollouts.github.io/assets/graphicalabstract.png" />
-  <title>Anchored Rollouts</title>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stabilizing 3D Continuum-Arm Rollouts via Equilibrium Anchoring and Feature-Lifted Residual Learning</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     :root {
-      --ink: #111111;
-      --muted: #666666;
-      --line: #dedede;
-      --soft: #f7f7f5;
-      --paper: #ffffff;
-      --accent: #1f5fbf;
-      --max: 1160px;
+      --primary-color: #202124;
+      --secondary-color: #5f6368;
+      --accent-color: #1a73e8;
+      --bg-color: #ffffff;
+      --bg-alt-color: #f8f9fa;
+      --border-color: #dadce0;
+      --max-width: 1000px;
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
     body {
+      font-family: 'Noto Sans', sans-serif;
+      color: var(--primary-color);
+      background-color: var(--bg-color);
+      line-height: 1.6;
       margin: 0;
-      color: var(--ink);
-      background: var(--paper);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-      line-height: 1.45;
+      padding: 0;
+      overflow-x: hidden;
     }
-
-    a {
-      color: var(--ink);
-      text-decoration: underline;
-      text-decoration-thickness: 1px;
-      text-underline-offset: 3px;
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Google Sans', sans-serif;
+      color: var(--primary-color);
+      font-weight: 500;
     }
-
-    a:hover {
-      color: var(--accent);
-    }
-
-    .wrap {
-      width: min(var(--max), calc(100% - 40px));
+    .container {
+      max-width: var(--max-width);
       margin: 0 auto;
+      padding: 0 20px;
     }
-
-    header {
-      border-bottom: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.94);
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      backdrop-filter: blur(12px);
+    .hero {
+      text-align: center;
+      padding: 60px 20px;
+      background-color: var(--bg-color);
+      border-bottom: 1px solid var(--border-color);
     }
-
-    .nav {
-      min-height: 62px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 22px;
-      font-size: 15px;
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      line-height: 1.2;
     }
-
-    .nav strong {
-      font-weight: 650;
+    .hero .conference {
+      font-size: 1.2rem;
+      color: var(--secondary-color);
+      margin-bottom: 30px;
+      font-weight: 500;
     }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      flex-wrap: wrap;
-      color: var(--muted);
+    .authors {
+      font-size: 1.1rem;
+      margin-bottom: 15px;
     }
-
-    .nav a {
-      color: inherit;
+    .authors a {
+      color: var(--accent-color);
       text-decoration: none;
     }
-
-    .nav a:hover {
-      color: var(--ink);
+    .authors a:hover {
+      text-decoration: underline;
     }
-
-    .hero {
-      padding: 64px 0 36px;
+    .affiliations {
+      font-size: 1rem;
+      color: var(--secondary-color);
+      margin-bottom: 30px;
     }
-
-    .venue {
+    .buttons {
       display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 28px;
-      color: var(--muted);
-      font-size: 15px;
-    }
-
-    .venue img {
-      height: 42px;
-      width: auto;
-    }
-
-    h1 {
-      max-width: 980px;
-      margin: 0;
-      font-size: clamp(42px, 7vw, 92px);
-      line-height: 0.98;
-      letter-spacing: 0;
-      font-weight: 720;
-    }
-
-    .subtitle {
-      max-width: 790px;
-      margin: 26px 0 0;
-      color: #333333;
-      font-size: clamp(19px, 2.3vw, 30px);
-      line-height: 1.22;
-    }
-
-    .authors {
-      max-width: 980px;
-      margin-top: 26px;
-      color: var(--muted);
-      font-size: 16px;
-    }
-
-    .authors a {
-      color: var(--ink);
-    }
-
-    .links {
-      display: flex;
-      gap: 12px;
+      justify-content: center;
       flex-wrap: wrap;
-      margin-top: 28px;
+      gap: 15px;
+      margin-bottom: 40px;
     }
-
-    .pill {
+    .btn {
       display: inline-flex;
       align-items: center;
-      min-height: 42px;
-      padding: 9px 15px;
-      border: 1px solid var(--ink);
-      border-radius: 999px;
-      color: var(--ink);
+      background-color: var(--primary-color);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 20px;
       text-decoration: none;
-      font-weight: 620;
+      font-weight: 500;
+      transition: background-color 0.2s;
     }
-
-    .pill:hover {
-      background: var(--ink);
-      color: #ffffff;
+    .btn:hover {
+      background-color: #444;
     }
-
-    .logos {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 26px;
-      margin-top: 42px;
-      padding-top: 24px;
-      border-top: 1px solid var(--line);
+    .btn i {
+      margin-right: 8px;
     }
-
-    .logos img {
-      max-height: 42px;
-      max-width: 190px;
-      object-fit: contain;
-      filter: grayscale(1);
-      opacity: 0.84;
+    .btn-outline {
+      background-color: transparent;
+      color: var(--primary-color);
+      border: 1px solid var(--border-color);
     }
-
-    section {
-      padding: 48px 0;
-      border-top: 1px solid var(--line);
+    .btn-outline:hover {
+      background-color: var(--bg-alt-color);
     }
-
+    .teaser-img {
+      max-width: 100%;
+      height: auto;
+      margin-top: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .section {
+      padding: 60px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
     .section-title {
-      display: grid;
-      grid-template-columns: 220px minmax(0, 1fr);
-      gap: 28px;
-      align-items: start;
-      margin-bottom: 26px;
+      font-size: 2rem;
+      margin-bottom: 30px;
+      text-align: center;
     }
-
-    .label {
-      color: var(--muted);
-      font-size: 14px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .abstract-text {
+      font-size: 1.1rem;
+      text-align: justify;
     }
-
-    h2 {
-      margin: 0;
-      max-width: 850px;
-      font-size: clamp(26px, 3.6vw, 48px);
-      line-height: 1.08;
-      letter-spacing: 0;
-      font-weight: 680;
+    .figure-container {
+      text-align: center;
+      margin: 40px 0;
     }
-
-    .text-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 22px;
+    .figure-container img {
+      max-width: 100%;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
-
-    .text-grid h3,
-    .result h3 {
-      margin: 0 0 8px;
-      font-size: 18px;
-      font-weight: 650;
-    }
-
-    .text-grid p,
-    .result p,
-    .caption,
-    .artifact-row span {
-      margin: 0;
-      color: var(--muted);
-      font-size: 15px;
-    }
-
-    .figure-main {
-      margin: 0;
-      padding: 18px;
-      border: 1px solid var(--line);
-      background: var(--soft);
-    }
-
-    .figure-main img {
-      display: block;
-      width: 100%;
-      max-height: 500px;
-      object-fit: contain;
-      background: #ffffff;
-    }
-
     .caption {
-      margin-top: 12px;
+      margin-top: 15px;
+      font-size: 0.95rem;
+      color: var(--secondary-color);
+      text-align: left;
     }
-
-    .figure-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
-    }
-
-    .figure-grid figure {
-      margin: 0;
-      padding: 14px;
-      border: 1px solid var(--line);
-      background: var(--soft);
-    }
-
-    .figure-grid img {
-      display: block;
-      width: 100%;
-      height: 310px;
-      object-fit: contain;
-      background: #ffffff;
-    }
-
-    .results {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 1px;
-      background: var(--line);
-      border: 1px solid var(--line);
-    }
-
-    .result {
-      background: #ffffff;
-      padding: 22px;
-      min-height: 150px;
-    }
-
-    .metric {
-      display: block;
-      margin-bottom: 12px;
-      font-size: 44px;
-      line-height: 1;
-      font-weight: 720;
-    }
-
-    .artifact {
-      border: 1px solid var(--line);
-    }
-
-    .artifact-row {
-      display: grid;
-      grid-template-columns: 220px minmax(0, 1fr);
-      gap: 20px;
-      padding: 15px 18px;
-      border-top: 1px solid var(--line);
-    }
-
-    .artifact-row:first-child {
-      border-top: 0;
-    }
-
-    .artifact-row strong {
-      font-weight: 650;
-    }
-
-    .video {
+    .video-container {
       position: relative;
-      width: min(860px, 100%);
-      aspect-ratio: 16 / 9;
-      border: 1px solid var(--line);
-      background: #000000;
+      padding-bottom: 56.25%; /* 16:9 */
+      height: 0;
+      overflow: hidden;
+      max-width: 100%;
+      margin: 40px 0;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-
-    .video iframe {
+    .video-container iframe {
       position: absolute;
-      inset: 0;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      border: 0;
     }
-
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+    .grid-2 img {
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
     pre {
-      margin: 0;
-      padding: 18px;
+      background-color: var(--bg-alt-color);
+      padding: 20px;
+      border-radius: 8px;
       overflow-x: auto;
-      border: 1px solid var(--line);
-      background: var(--soft);
-      color: var(--ink);
-      font-size: 14px;
-      line-height: 1.5;
+      font-size: 0.9rem;
+      border: 1px solid var(--border-color);
     }
-
     footer {
-      padding: 28px 0 40px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 14px;
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--secondary-color);
+      background-color: var(--bg-alt-color);
     }
-
-    @media (max-width: 850px) {
-      .nav {
-        align-items: flex-start;
-        flex-direction: column;
-        padding: 14px 0;
+    .logos-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .logos-container img {
+      max-height: 50px;
+      filter: grayscale(100%);
+      opacity: 0.7;
+      transition: all 0.3s;
+    }
+    .logos-container img:hover {
+      filter: grayscale(0%);
+      opacity: 1;
+    }
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2rem;
       }
-
-      .hero {
-        padding-top: 42px;
-      }
-
-      .section-title,
-      .text-grid,
-      .figure-grid,
-      .results,
-      .artifact-row {
+      .grid-2 {
         grid-template-columns: 1fr;
-      }
-
-      .figure-grid img {
-        height: auto;
-        max-height: 340px;
       }
     }
   </style>
 </head>
-
 <body>
-  <header>
-    <nav class="wrap nav" aria-label="Main navigation">
-      <strong>Anchored Rollouts</strong>
-      <div class="nav-links">
-        <a href="#idea">Idea</a>
-        <a href="#setup">Setup</a>
-        <a href="#results">Results</a>
-        <a href="#artifact">Artifact</a>
-        <a href="#citation">Citation</a>
-      </div>
-    </nav>
-  </header>
 
-  <main>
-    <div class="wrap hero">
-      <div class="venue">
-        <img src="assets/rss2026-logo.png" alt="Robotics: Science and Systems 2026" />
-        <span>Robotics: Science and Systems 2026</span>
+  <div class="hero">
+    <div class="container">
+      <h1>Stabilizing 3D Continuum-Arm Rollouts via Equilibrium Anchoring and Feature-Lifted Residual Learning</h1>
+      <div class="conference">Robotics: Science and Systems (RSS) 2026</div>
+      
+      <div class="authors">
+        <a href="https://iahsant.github.io/" target="_blank">Ahsan Tanveer</a><sup>1,2</sup> &nbsp;&nbsp;
+        Rahdar Hussain Afridi<sup>1,2,3,*</sup> &nbsp;&nbsp;
+        Waqar Hussain Afridi<sup>1,2,*</sup> &nbsp;&nbsp;<br/>
+        Feitian Zhang<sup>2,4</sup> &nbsp;&nbsp;
+        Guangming Xie<sup>1,2,5,&dagger;</sup>
       </div>
-      <h1>Stabilizing 3D Continuum-Arm Rollouts</h1>
-      <p class="subtitle">
-        Equilibrium anchoring plus residual learning for stable long-horizon prediction under actuation shift.
-      </p>
-      <p class="authors">
-        <a href="https://iahsant.github.io/" target="_blank" rel="noopener">Ahsan Tanveer</a>,
-        Rahdar Hussain Afridi, Waqar Hussain Afridi, Feitian Zhang, Guangming Xie
-      </p>
-      <div class="links">
-        <a class="pill" href="rss2026-artifact-v1/README.md">Artifact</a>
-        <a class="pill" href="https://github.com/anchored-rollouts/anchored-rollouts.github.io/tree/main/rss2026-artifact-v1" target="_blank" rel="noopener">GitHub</a>
-        <a class="pill" href="#video">Video</a>
-        <a class="pill" href="#citation">Citation</a>
+      
+      <div class="affiliations">
+        <sup>1</sup>Intelligent Biomimetic Design Lab, Peking University &nbsp;&nbsp;
+        <sup>2</sup>State Key Laboratory of Turbulence and Complex Systems &nbsp;&nbsp;<br/>
+        <sup>3</sup>FAW Robotics &nbsp;&nbsp;
+        <sup>4</sup>Robotics and Control Lab, Peking University &nbsp;&nbsp;
+        <sup>5</sup>Institute of Ocean Research, Peking University<br/>
+        <small><sup>*</sup>Equal contribution &nbsp;&nbsp; <sup>&dagger;</sup>Corresponding author</small>
       </div>
-      <div class="logos" aria-label="Affiliations">
+
+      <div class="logos-container">
         <img src="assets/pku-logo.png" alt="Peking University" />
-        <img src="assets/faw-logo.jpg" alt="FAW Group Co., Ltd." />
-        <img src="assets/ocean-research-logo.jpg" alt="Institute of Ocean Research, Peking University" />
+        <img src="assets/faw-logo.jpg" alt="FAW Robotics" />
+        <img src="assets/ocean-research-logo.jpg" alt="Institute of Ocean Research" />
+      </div>
+      <br><br>
+
+      <div class="buttons">
+        <a href="rss2026-artifact-v1/README.md" class="btn"><i class="fas fa-file-pdf"></i> Paper (PDF coming soon)</a>
+        <a href="https://github.com/anchored-rollouts/anchored-rollouts.github.io/tree/main/rss2026-artifact-v1" class="btn btn-outline" target="_blank"><i class="fab fa-github"></i> Code & Data</a>
+        <a href="#video" class="btn btn-outline"><i class="fas fa-play"></i> Video</a>
+      </div>
+
+      <img src="assets/graphicalabstract.png" alt="Graphical Abstract" class="teaser-img">
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="container">
+      <h2 class="section-title">Abstract</h2>
+      <p class="abstract-text">
+        Multi-step motion prediction for continuum robots is difficult, especially under actuation distribution shift, where error accumulation can distort the predicted steady response and destabilize rollouts. This paper introduces a hybrid equilibrium-anchored residual-learning framework for a tendon-driven 3D continuum arm that makes steady behavior explicit. An equilibrium prior is learned from inexpensive static equilibrium data and used in a contractive update that continuously pulls predictions toward the equilibrium estimate, improving rollout stability. A lightweight feature-lifted residual model, linear in parameters, learns the remaining one-step mismatch from dynamic trajectory data, recovering transient dynamics. The approach is validated on 200-step simulation rollouts under stronger and faster actuation than in training, with an additional soft-tail hardware test under actuation-frequency shift. The Hybrid method reduces backbone position RMSE by 26% and tip position RMSE by 27%, producing consistent accuracy gains over prior-only and residual-only predictors while remaining stable across all tested trajectories. The same proposed model also improves robustness on standard nonlinear benchmarks against a combined Koopman baseline under matched evaluation protocols.
+      </p>
+    </div>
+  </div>
+
+  <div class="section" id="video">
+    <div class="container">
+      <h2 class="section-title">Video</h2>
+      <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/HR3R7MmTknQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
     </div>
+  </div>
 
-    <section id="idea">
-      <div class="wrap">
-        <div class="section-title">
-          <div class="label">Idea</div>
-          <h2>Keep a steady-state reference inside the recursive predictor.</h2>
+  <div class="section bg-alt">
+    <div class="container">
+      <h2 class="section-title">Methodology</h2>
+      <p>Our approach leverages an <strong>equilibrium prior</strong> learned from inexpensive static data to anchor dynamic predictions. This acts as a stabilizing reference that suppresses long-term drift. We then learn a <strong>residual correction</strong> from transient dynamic data to capture the missing high-frequency dynamics. By separating the steady-state from the transient mismatch, our model maintains stability even when rolled out for hundreds of steps under actuation shifts.</p>
+      
+      <div class="figure-container">
+        <img src="assets/frameworkFig2.svg" alt="Framework">
+        <div class="caption"><strong>Equilibrium-anchored residual learning:</strong> (a) The equilibrium prior is learned from static data and anchors the intermediate state. A residual then learns the remaining one-step mismatch. (b) During OOD rollouts, this two-step recursion drastically reduces error accumulation.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="container">
+      <h2 class="section-title">Setup & Simulation</h2>
+      
+      <div class="figure-container">
+        <img src="assets/setupFig2.svg" alt="Continuum arm setup" style="max-width: 600px;">
+        <div class="caption"><strong>Tendon-driven continuum arm:</strong> The model includes three routing tendons and spacer disks. Actuation commands induce complex 3D bending dynamics.</div>
+      </div>
+      
+    </div>
+  </div>
+
+  <div class="section bg-alt">
+    <div class="container">
+      <h2 class="section-title">Rollout Stability under Actuation Shift</h2>
+      <p>Under out-of-distribution actuation (larger amplitudes and higher frequencies), naive residual methods drift and eventually blow up. The pure equilibrium prior remains stable but exhibits large steady-state errors. The Hybrid approach effectively combines the stability of the prior with the accuracy of the residual.</p>
+      
+      <div class="grid-2">
+        <div class="figure-container">
+          <img src="assets/RMSEandComparisonBox2.svg" alt="RMSE Box Plots">
+          <div class="caption"><strong>Rollout Error:</strong> Our Hybrid model substantially reduces the median shape RMSE over time and tightens the error distribution across unseen test trajectories.</div>
         </div>
-        <div class="text-grid">
-          <div>
-            <h3>Problem</h3>
-            <p>Open-loop continuum-arm rollouts drift when test actuation is stronger or faster than training actuation.</p>
-          </div>
-          <div>
-            <h3>Anchor</h3>
-            <p>Static equilibrium data learns the command-conditioned steady shape used at every rollout step.</p>
-          </div>
-          <div>
-            <h3>Residual</h3>
-            <p>A lightweight linear residual learns transient mismatch around the anchored prediction.</p>
-          </div>
+        <div class="figure-container">
+          <img src="assets/backboneComparison2.svg" alt="Backbone Comparison">
+          <div class="caption"><strong>Backbone Configuration:</strong> Over a 6s rollout, the Hybrid model maintains tight adherence to the ground truth backbone, preventing the catastrophic drift seen in unanchored residual approaches.</div>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <section id="method">
-      <div class="wrap">
-        <figure class="figure-main">
-          <img src="assets/frameworkFig2.svg" alt="Training and rollout framework" />
-          <figcaption class="caption">Training and rollout pipeline for the equilibrium-anchored residual predictor.</figcaption>
-        </figure>
+  <div class="section">
+    <div class="container">
+      <h2 class="section-title">Hardware Validation & Benchmarks</h2>
+      <p>Beyond simulation, we validate our method on a physical PneuNet soft tail and standard nonlinear benchmarks (Van der Pol oscillator and Pendulum-Cart).</p>
+      
+      <div class="figure-container">
+        <img src="assets/FishVanderPOl2.svg" alt="Hardware Validation">
+        <div class="caption"><strong>Soft-Tail Hardware & Van der Pol:</strong> The Hybrid model significantly limits tracking error under physical actuation-frequency shifts. Furthermore, compared to state-of-the-art residual Koopman baselines, the anchored formulation achieves a 0% catastrophic failure rate on extended non-linear benchmark rollouts.</div>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <section id="setup">
-      <div class="wrap">
-        <div class="section-title">
-          <div class="label">Setup</div>
-          <h2>Three tendon commands, 144-dimensional backbone state, 200 rollout steps.</h2>
-        </div>
-        <div class="figure-grid">
-          <figure>
-            <img src="assets/setupFig2.svg" alt="Continuum arm setup" />
-            <figcaption class="caption">Tendon-driven continuum arm and sampled backbone points.</figcaption>
-          </figure>
-          <figure>
-            <img src="assets/graphicalabstract.png" alt="Rollout behavior summary" />
-            <figcaption class="caption">Anchor-only, residual-only, and hybrid rollout behavior.</figcaption>
-          </figure>
-        </div>
-      </div>
-    </section>
-
-    <section id="results">
-      <div class="wrap">
-        <div class="section-title">
-          <div class="label">Results</div>
-          <h2>Hybrid rollouts reduce distal drift while staying stable.</h2>
-        </div>
-        <div class="results">
-          <div class="result">
-            <span class="metric">26%</span>
-            <h3>Backbone RMSE reduction</h3>
-            <p>Relative to the equilibrium-only anchor.</p>
-          </div>
-          <div class="result">
-            <span class="metric">27%</span>
-            <h3>Tip RMSE reduction</h3>
-            <p>Over 200-step out-of-distribution rollouts.</p>
-          </div>
-          <div class="result">
-            <span class="metric">51%</span>
-            <h3>Hardware gain</h3>
-            <p>Minimum reduction over anchor-only soft-tail prediction.</p>
-          </div>
-          <div class="result">
-            <span class="metric">0%</span>
-            <h3>Catastrophic rate</h3>
-            <p>For the reported Van der Pol hybrid runs.</p>
-          </div>
-        </div>
-        <div class="figure-grid" style="margin-top: 18px;">
-          <figure>
-            <img src="assets/RMSEandComparisonBox2.svg" alt="RMSE comparison" />
-            <figcaption class="caption">Error over time, along the backbone, and across test trajectories.</figcaption>
-          </figure>
-          <figure>
-            <img src="assets/backboneComparison2.svg" alt="Backbone comparison" />
-            <figcaption class="caption">Representative backbone and tip-plane rollout comparisons.</figcaption>
-          </figure>
-        </div>
-      </div>
-    </section>
-
-    <section id="artifact">
-      <div class="wrap">
-        <div class="section-title">
-          <div class="label">Artifact</div>
-          <h2>Code, datasets, and compact result summaries.</h2>
-        </div>
-        <div class="artifact">
-          <div class="artifact-row">
-            <strong>Main script</strong>
-            <span><a href="rss2026-artifact-v1/scripts/run_continuum_models.py">run_continuum_models.py</a></span>
-          </div>
-          <div class="artifact-row">
-            <strong>Source</strong>
-            <span><a href="rss2026-artifact-v1/src/anchored_rollouts/experiments.py">src/anchored_rollouts</a></span>
-          </div>
-          <div class="artifact-row">
-            <strong>Data</strong>
-            <span><a href="rss2026-artifact-v1/data/D1_train.h5">D1_train.h5</a>, <a href="rss2026-artifact-v1/data/D1_test.h5">D1_test.h5</a>, <a href="rss2026-artifact-v1/data/D2_dataset.h5">D2_dataset.h5</a></span>
-          </div>
-          <div class="artifact-row">
-            <strong>Sweeps</strong>
-            <span><a href="rss2026-artifact-v1/scripts/run_seed_sweep.py">seed sweep</a>, <a href="rss2026-artifact-v1/scripts/run_d2_fraction_sweep.py">equilibrium-data sweep</a></span>
-          </div>
-          <div class="artifact-row">
-            <strong>Summaries</strong>
-            <span><a href="rss2026-artifact-v1/results/sweeps/d2_fraction_summary.csv">CSV and JSON results</a></span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="video">
-      <div class="wrap">
-        <div class="section-title">
-          <div class="label">Video</div>
-          <h2>Supplementary video.</h2>
-        </div>
-        <div class="video">
-          <iframe
-            src="https://www.youtube.com/embed/HR3R7MmTknQ"
-            title="Supplementary video"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-          </iframe>
-        </div>
-      </div>
-    </section>
-
-    <section id="citation">
-      <div class="wrap">
-        <div class="section-title">
-          <div class="label">Citation</div>
-          <h2>Citation</h2>
-        </div>
-        <pre>@inproceedings{tanveer2026stabilizing,
+  <div class="section bg-alt">
+    <div class="container">
+      <h2 class="section-title">BibTeX</h2>
+      <pre><code>@inproceedings{tanveer2026stabilizing,
   title={Stabilizing 3D Continuum-Arm Rollouts via Equilibrium Anchoring and Feature-Lifted Residual Learning},
   author={Tanveer, Ahsan and Afridi, Rahdar Hussain and Afridi, Waqar Hussain and Zhang, Feitian and Xie, Guangming},
   booktitle={Robotics: Science and Systems},
   year={2026}
-}</pre>
-      </div>
-    </section>
-  </main>
+}</code></pre>
+    </div>
+  </div>
 
   <footer>
-    <div class="wrap">
-      Project page managed by <a href="https://iahsant.github.io/" target="_blank" rel="noopener">Ahsan Tanveer</a>.
-      RSS 2026 Artifact V1 is hosted in this repository.
+    <div class="container">
+      <p>&copy; 2026 Anchored Rollouts Project. Template inspired by academic project pages from top robotics labs.</p>
     </div>
   </footer>
+
 </body>
 </html>
