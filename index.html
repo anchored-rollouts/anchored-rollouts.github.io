@@ -7,35 +7,38 @@
   <title>Stabilizing 3D Continuum-Arm Rollouts | RSS 2026</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     :root {
-      --ink: #14141f;
-      --ink-muted: #4a4a5c;
-      --ink-light: #71718a;
-      --surface: #ffffff;
-      --surface-alt: #f4f5f8;
-      --surface-hero: linear-gradient(165deg, #f8f9fc 0%, #eef1f8 45%, #f4f5f8 100%);
-      --border: #e2e4ec;
-      --accent: #1b6b5a;
-      --accent-light: #e8f4f0;
-      --accent-hover: #145548;
-      --prior: #3b6fd9;
-      --residual: #d97a2b;
-      --hybrid: #2a9d6e;
+      --bg: #0a0b10;
+      --surface: #14161f;
+      --surface-alt: #06070a;
+      --ink: #e9eaf0;
+      --ink-muted: #a6a9ba;
+      --ink-light: #83869c;
+      --surface-hero: radial-gradient(ellipse 900px 520px at 50% -8%, rgba(63, 220, 180, 0.13), transparent 62%), linear-gradient(180deg, #0d0f18 0%, #0a0b10 65%, #0a0b10 100%);
+      --border: rgba(255, 255, 255, 0.09);
+      --border-strong: rgba(255, 255, 255, 0.16);
+      --accent: #3fdcb4;
+      --accent-light: rgba(63, 220, 180, 0.12);
+      --accent-hover: #6ee8c8;
+      --accent-solid: #1f8f72;
+      --accent-solid-hover: #17a883;
+      --code-bg: #050609;
       --max-width: 1080px;
       --radius: 12px;
-      --shadow: 0 2px 16px rgba(20, 20, 31, 0.06);
-      --shadow-lg: 0 8px 32px rgba(20, 20, 31, 0.09);
+      --shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 2px 20px rgba(0, 0, 0, 0.45);
+      --shadow-lg: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 16px 48px rgba(0, 0, 0, 0.55);
       --font: 'Inter', system-ui, -apple-system, sans-serif;
+      --font-display: 'Fraunces', 'Source Serif 4', Georgia, serif;
       --text-xs: 0.8125rem;
       --text-sm: 0.875rem;
       --text-base: 1rem;
       --text-lg: 1.125rem;
       --text-xl: 1.5rem;
       --leading: 1.65;
-      --leading-tight: 1.4;
+      --leading-tight: 1.3;
     }
 
     *, *::before, *::after { box-sizing: border-box; }
@@ -45,20 +48,22 @@
     body {
       font-family: var(--font);
       color: var(--ink);
-      background: var(--surface);
+      background: var(--bg);
       line-height: var(--leading);
       margin: 0;
       font-size: var(--text-base);
       -webkit-font-smoothing: antialiased;
     }
 
-    h1, h2, h3, h4, p {
+    h4, p {
       font-family: var(--font);
     }
 
     h1, h2, h3 {
-      font-weight: 700;
-      letter-spacing: -0.02em;
+      font-family: var(--font-display);
+      font-optical-sizing: auto;
+      font-weight: 600;
+      letter-spacing: -0.01em;
       line-height: var(--leading-tight);
       color: var(--ink);
     }
@@ -79,8 +84,6 @@
     }
 
     .meta-text,
-    .affiliations,
-    .legend,
     .table-note,
     table.results,
     .highlight-card .label,
@@ -113,9 +116,21 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(12px);
+      background: rgba(9, 10, 15, 0.72);
+      backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
+    }
+
+    .nav::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.35;
+      pointer-events: none;
     }
 
     .nav-inner {
@@ -127,7 +142,10 @@
     }
 
     .nav-brand {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
       font-weight: 600;
+      letter-spacing: -0.01em;
       color: var(--ink);
       text-decoration: none;
       white-space: nowrap;
@@ -167,19 +185,13 @@
     .venue-badge {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 6px 16px;
-      font-size: var(--text-sm);
-      font-weight: 600;
-      color: var(--ink-muted);
       margin-bottom: 24px;
-      box-shadow: var(--shadow);
     }
 
-    .venue-badge i { color: var(--accent); }
+    .venue-badge img {
+      height: 46px;
+      display: block;
+    }
 
     .hero h1 {
       font-size: clamp(1.75rem, 4vw, 2.5rem);
@@ -197,33 +209,32 @@
     .authors-block {
       text-align: center;
       margin-bottom: 12px;
+      color: var(--ink-muted);
     }
 
     .authors-block .author-line {
-      font-size: var(--text-base);
+      font-size: 1.0625rem;
+      letter-spacing: 0.01em;
       margin-bottom: 6px;
     }
 
     .authors-block a {
-      font-weight: 500;
       color: var(--ink);
     }
 
-    .authors-block a:hover { color: var(--accent); }
+    .authors-block a:hover { color: var(--accent-hover); }
 
-    .authors-block sup {
-      font-size: 0.7em;
-      color: var(--ink-light);
+    .affiliation-logo {
+      display: flex;
+      justify-content: center;
+      margin: 0 0 28px;
     }
 
-    .affiliations {
-      text-align: center;
-      color: var(--ink-light);
-      max-width: 720px;
-      margin: 0 auto 28px;
+    .affiliation-logo img {
+      height: 44px;
+      filter: brightness(0) invert(1);
+      opacity: 0.88;
     }
-
-    .affiliations sup { font-size: 0.75em; }
 
     .hero-actions {
       display: flex;
@@ -250,15 +261,15 @@
     .btn:hover { text-decoration: none; transform: translateY(-1px); }
 
     .btn-primary {
-      background: var(--accent);
+      background: var(--accent-solid);
       color: #fff;
-      box-shadow: 0 2px 8px rgba(27, 107, 90, 0.25);
+      box-shadow: 0 2px 12px rgba(31, 143, 114, 0.35);
     }
 
     .btn-primary:hover {
-      background: var(--accent-hover);
+      background: var(--accent-solid-hover);
       color: #fff;
-      box-shadow: 0 4px 14px rgba(27, 107, 90, 0.3);
+      box-shadow: 0 4px 18px rgba(31, 143, 114, 0.45);
     }
 
     .btn-secondary {
@@ -278,43 +289,22 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 16px;
+      padding: 4px;
       box-shadow: var(--shadow-lg);
+      max-width: 820px;
+      margin: 0 auto;
     }
 
     .teaser-wrap img {
       width: 100%;
       height: auto;
       display: block;
-      border-radius: 6px;
+      border-radius: 8px;
     }
 
     .teaser-caption {
       margin-top: 12px;
       text-align: center;
-    }
-
-    .legend {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-top: 14px;
-      font-weight: 500;
-      color: var(--ink-light);
-    }
-
-    .legend span {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .legend .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      display: inline-block;
     }
 
     /* Highlights */
@@ -338,8 +328,9 @@
     }
 
     .highlight-card .value {
-      font-size: 1.75rem;
-      font-weight: 700;
+      font-family: var(--font-display);
+      font-size: 1.85rem;
+      font-weight: 600;
       color: var(--accent);
       line-height: 1.1;
       margin-bottom: 4px;
@@ -444,33 +435,9 @@
       margin: 0;
     }
 
-    .eq-block {
-      background: var(--surface-alt);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px 20px;
-      margin: 20px auto;
-      max-width: 640px;
-      text-align: center;
-      font-family: var(--font);
-      font-size: var(--text-base);
-      font-weight: 500;
-      color: var(--ink);
-      line-height: var(--leading);
-    }
-
     /* Figures */
     .figure {
       margin: 32px 0;
-    }
-
-    .figure-frame {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 12px;
-      box-shadow: var(--shadow);
-      overflow: hidden;
     }
 
     .figure-frame img {
@@ -540,7 +507,7 @@
 
     table.results tr.highlight-row td {
       font-weight: 600;
-      color: var(--accent-hover);
+      color: var(--accent);
     }
 
     .table-note {
@@ -579,8 +546,9 @@
     }
 
     .bibtex-wrap pre {
-      background: var(--ink);
+      background: var(--code-bg);
       color: #c8d0e0;
+      border: 1px solid var(--border);
       padding: 24px;
       border-radius: var(--radius);
       overflow-x: auto;
@@ -610,12 +578,13 @@
     footer {
       text-align: center;
       padding: 40px 24px;
-      background: var(--ink);
-      color: #9aa0b4;
+      background: var(--code-bg);
+      border-top: 1px solid var(--border);
+      color: var(--ink-light);
     }
 
-    footer a { color: #c8d0e0; }
-    footer a:hover { color: #fff; }
+    footer a { color: var(--ink-muted); }
+    footer a:hover { color: var(--ink); }
 
     /* Responsive */
     @media (max-width: 900px) {
@@ -651,7 +620,7 @@
     <div class="container">
       <div style="text-align:center">
         <div class="venue-badge">
-          <img src="assets/rss2026-logo.png" alt="Robotics: Science and Systems 2026" style="height: 28px; vertical-align: middle;">
+          <img src="assets/rss2026-logo.png" alt="Robotics: Science and Systems 2026">
         </div>
       </div>
 
@@ -663,29 +632,23 @@
 
       <div class="authors-block">
         <div class="author-line">
-          <a href="https://iahsant.github.io/" target="_blank" rel="noopener">Ahsan Tanveer</a><sup>1,2</sup>,
-          Rahdar Hussain Afridi<sup>1,2,3,&ast;</sup>,
-          Waqar Hussain Afridi<sup>1,2,&ast;</sup>,
+          <a href="https://iahsant.github.io/" target="_blank" rel="noopener">Ahsan Tanveer</a>,
+          Rahdar Hussain Afridi,
+          Waqar Hussain Afridi,
         </div>
         <div class="author-line">
-          Feitian Zhang<sup>2,4</sup>,
-          <a href="mailto:xiegming@pku.edu.cn">Guangming Xie</a><sup>1,2,5,&dagger;</sup>
+          Feitian Zhang,
+          <a href="mailto:xiegming@pku.edu.cn">Guangming Xie</a>
         </div>
       </div>
 
-      <p class="affiliations">
-        <sup>1</sup>Intelligent Biomimetic Design Lab, Peking University &nbsp;&middot;&nbsp;
-        <sup>2</sup>State Key Laboratory of Turbulence and Complex Systems, Peking University<br>
-        <sup>3</sup>FAW Robotics &nbsp;&middot;&nbsp;
-        <sup>4</sup>Robotics and Control Lab, Peking University &nbsp;&middot;&nbsp;
-        <sup>5</sup>Institute of Ocean Research, Peking University<br>
-        <sup>&ast;</sup>Equal contribution &nbsp;&middot;&nbsp;
-        <sup>&dagger;</sup>Corresponding author
-      </p>
+      <div class="affiliation-logo">
+        <img src="assets/pku-logo.png" alt="Peking University">
+      </div>
 
       <div class="hero-actions">
-        <a href="rss2026-artifact-v1/README.md" class="btn btn-primary">
-          <i class="fas fa-file-alt"></i> Paper (PDF coming soon)
+        <a href="https://www.roboticsproceedings.org/rss22/p106.pdf" class="btn btn-primary" target="_blank" rel="noopener">
+          <i class="fas fa-file-alt"></i> Paper
         </a>
         <a href="https://github.com/anchored-rollouts/anchored-rollouts.github.io/tree/main/rss2026-artifact-v1" class="btn btn-secondary" target="_blank" rel="noopener">
           <i class="fab fa-github"></i> Code &amp; Data
@@ -700,12 +663,6 @@
         <p class="teaser-caption">
           Recursive rollout comparison for a tendon-driven continuum arm. The equilibrium prior stays stable but drifts in steady state; the residual captures transients but can blow up; the hybrid suppresses drift while tracking the ground truth.
         </p>
-        <div class="legend">
-          <span><span class="dot" style="background:#888"></span> Ground Truth</span>
-          <span><span class="dot" style="background:var(--prior)"></span> Equilibrium Prior</span>
-          <span><span class="dot" style="background:var(--residual)"></span> Residual</span>
-          <span><span class="dot" style="background:var(--hybrid)"></span> Hybrid</span>
-        </div>
       </div>
     </div>
   </header>
@@ -775,29 +732,11 @@
         </div>
       </div>
 
-      <div class="eq-block">
-        x&#772;<sub>k+1</sub> = x&#770;<sub>k</sub> + &beta;(P(u<sub>k</sub>) &minus; x&#770;<sub>k</sub>) &nbsp;&nbsp;&rarr;&nbsp;&nbsp; x&#770;<sub>k+1</sub> = x&#772;<sub>k+1</sub> + R([x&#772;<sub>k+1</sub>; u<sub>k</sub>])
-      </div>
-
       <figure class="figure">
         <div class="figure-frame">
           <img src="assets/frameworkFig.png" alt="Training and rollout framework for equilibrium-anchored residual learning">
         </div>
         <p class="figure-caption"><strong>Framework overview.</strong> (a) Training: learn equilibrium prior <em>P</em> from static dataset <em>D<sub>2</sub></em>, form anchored states, then fit residual <em>R</em> on dynamic dataset <em>D<sub>1</sub></em>. (b) OOD rollout: iterate the anchored update plus residual correction for multi-step prediction.</p>
-      </figure>
-    </div>
-  </section>
-
-  <section class="section section-alt" id="setup">
-    <div class="container">
-      <h2 class="section-title">Experimental Setup</h2>
-      <p class="section-lead">A tendon-driven 3D continuum arm simulated with a Cosserat-rod model. Training uses moderate actuation; OOD testing uses larger amplitudes and higher dominant frequencies.</p>
-
-      <figure class="figure figure-narrow">
-        <div class="figure-frame">
-          <img src="assets/setupFig2.svg" alt="Tendon-driven continuum arm model and notation">
-        </div>
-        <p class="figure-caption"><strong>Continuum arm model.</strong> Three routing tendons actuate a flexible backbone with spacer disks. The 144-dimensional state captures configuration at six backbone sampling locations.</p>
       </figure>
     </div>
   </section>
